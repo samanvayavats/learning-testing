@@ -1,10 +1,33 @@
-import express from 'express'
-const app = express()
+import express from "express";
+import { z } from "zod";
+import { Sum } from "./models/sum.js";
 
-app.use(express.json())
+const app = express();
 
-app.post('sum' ,async(req , res)=>{
+app.use(express.json());
 
-})
+const SumZod = z.object({
+    a: z.number(),
+    b: z.number(),
+});
 
-export {app}
+app.post("/sum", async (req, res) => {
+    const parsedInput = SumZod.safeParse(req.body);
+
+    if (!parsedInput.success) {
+        return res.status(411).json({
+            message: "INVALID INPUT",
+        });
+    }
+
+    const sum = parsedInput.data.a + parsedInput.data.b;
+
+
+    await Sum.create({ sum });
+
+    return res.status(200).json({
+        sum,
+    });
+});
+
+export { app };
