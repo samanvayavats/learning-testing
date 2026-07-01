@@ -24,4 +24,23 @@ app.post('/sum', (req, res) => {
     })
 })
 
+// checking for header too
+
+app.get('/sum' , (req , res)=>{
+    const parsedInput = Sum.safeParse({
+        a : Number( req.headers['a']) ,
+        b : Number( req.headers['b'])
+    })
+    
+     if(!parsedInput.success){
+        return res.status(411).json({
+            message :'invalid input'
+        })
+    }
+
+    const sum = parsedInput.data.a + parsedInput.data.b
+    return res.status(200).json({
+        sum
+    })
+})
 export {app}
