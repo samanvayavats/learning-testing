@@ -1,12 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
-
+import { mongooseMode } from "../__mock__/index.js";
 // Mock BEFORE importing app
-vi.mock("../models/sum.js", () => ({
-    Sum: {
-        create: vi.fn(),
-    },
-}));
+vi.mock("../models/sum.js", () => (mongooseMode));
+// vi.mock("../models/sum.js", () => ({
+//     Sum :{
+//         create : vi.fn()
+//     }
+// }));
 
 import { app } from "../index.js";
 import { Sum } from "../models/sum.js";
