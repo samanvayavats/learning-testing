@@ -21,18 +21,27 @@ describe('sum module ', () => {
      
         prismaClient.request.create.mockResolvedValue({
             id: 1,
-            a: 4,
+            a: 2,
             b: 4,
-            result: 8,
+            result: 6,
         });
 
+        vi.spyOn(prismaClient.request , 'create')
+
         const res = await request(app).post('/request').send({
-            a: 4,
+            a: 2,
             b: 4
         })
 
-     console.log("res " , res.body)
-        expect(res.body.answer).toBe(8)
+        expect(prismaClient.request.create).toHaveBeenCalledWith({
+            data: {
+                a: 2,
+                b: 4,
+                result: 6,
+            },
+        })
+
+        expect(res.body.answer).toBe(6)
         expect(res.body.id).toBe(1)
         expect(res.status).toBe(200)
 
